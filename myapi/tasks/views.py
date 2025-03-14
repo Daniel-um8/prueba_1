@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+from decouple import config
+from django.db import connection
 from rest_framework import generics, permissions
 from .models import Task
 from .serializers import TaskSerializer
@@ -32,3 +35,18 @@ class TaskRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+def debug_env(request):
+    try:
+        # Verificar la conexión a la base de datos
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            db_connection = "OK"
+    except Exception as e:
+        db_connection = str(e)
+
+    return JsonResponse({
+        'SECRET_KEY': config('SECRET_KEY'),
+        'DB_NAME': config('DB_NAME'),
+        'DB_USER': config('DB_USER'),
+        'DB_CONNECTION': db_connection,  # Verificar la conexión a la base de datos
+    })
