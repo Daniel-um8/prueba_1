@@ -45,7 +45,6 @@ def debug_env(request):
         db_connection = str(e)
 
     return JsonResponse({
-        'SECRET_KEY': config('SECRET_KEY'),
         'DB_NAME': config('DB_NAME'),
         'DB_USER': config('DB_USER'),
         'DB_CONNECTION': db_connection,  # Verificar la conexión a la base de datos
